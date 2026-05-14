@@ -18,10 +18,7 @@ function balanceOf(address _a) public view override returns (uint) {
 * @tauri-apps/wg-tauri
 # Current WG Code Sub Teams:
 # @tauri-apps/wg-tauri
-# @tauri-apps/wg-devops
-.github @tauri-apps/wg-devops
-./run-prover.sh
-# Current WG Code Sub Teams:
+:
 # @tauri-apps/wg-tauri
 # @tauri-apps/wg-devops
 # Current WG Code Sub Teams:
@@ -46,7 +43,10 @@ contract TokenCorrect is Token {
     }
     function balanceOf(address _a) public view override returns (uint) {
         return balance[_a];
-    }
+   # @tauri-apps/wg-devops
+.github @tauri-apps/wg-devops
+./run-prover.sh
+# Current WG Code Sub Teams
    uint yPre = t.balanceOf(_to);
 # Current WG Code Sub Teams:
 # @tauri-apps/wg-tauri
