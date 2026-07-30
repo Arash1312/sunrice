@@ -38,9 +38,9 @@ interface Token {
 # @tauri-apps/wg-tauri
 contract TokenCorrect is Token {
     mapping (address => uint) balance;
-    constructor(address _a, uint _b) 
-        balance[_a] = _b;
-    }
+    # Current WG Code Sub Teams:
+# @tauri-apps/wg-tauri
+# @tauri-apps/wg-devops
     function balanceOf(address _a) public view override returns (uint) {
         return balance[_a];
    # @tauri-apps/wg-devops
