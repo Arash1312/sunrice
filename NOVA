@@ -1,0 +1,201 @@
+#!/usr/bin/env python3
+
+"""
+NOVA
+Minimal Project Scaffolder
+
+A fast and lightweight CLI for creating clean project structures
+from predefined templates.
+
+Usage:
+    python nova.py create my-app python
+    python nova.py create web-app web
+    python nova.py list
+"""
+
+import argparse
+import os
+import sys
+from pathlib import Path
+
+
+TEMPLATES = {
+    "python": {
+        "files": {
+            "src/main.py": '''def main():
+    print("Hello from NOVA")
+
+
+if __name__ == "__main__":
+    main()
+''',
+            "README.md": "# Python Project\n",
+            ".gitignore": "__pycache__/\n*.pyc\n.env\n",
+        }
+    },
+
+    "web": {
+        "files": {
+            "index.html": '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <h1>Hello, NOVA.</h1>
+        <p>Your project starts here.</p>
+    </main>
+</body>
+</html>
+''',
+            "style.css": '''* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    font-family: system-ui, sans-serif;
+    background: #0f0f0f;
+    color: #ffffff;
+}
+
+main {
+    text-align: center;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: #999;
+}
+''',
+            "README.md": "# Web Project\n",
+        }
+    },
+
+    "node": {
+        "files": {
+            "src/index.js": '''function main() {
+    console.log("Hello from NOVA");
+}
+
+main();
+''',
+            "package.json": '''{
+  "name": "nova-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}
+''',
+            "README.md": "# Node Project\n",
+            ".gitignore": "node_modules/\n.env\n",
+        }
+    }
+}
+
+
+def create_project(name, template):
+    if template not in TEMPLATES:
+        print(f"Error: Unknown template '{template}'.")
+        print("Use 'nova list' to see available templates.")
+        return False
+
+    root = Path(name)
+
+    if root.exists():
+        print(f"Error: Directory '{name}' already exists.")
+        return False
+
+    root.mkdir(parents=True)
+
+    for filename, content in TEMPLATES[template]["files"].items():
+        file_path = root / filename
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.write_text(content, encoding="utf-8")
+
+    print()
+    print(f"✓ Created {name}")
+    print(f"✓ Template: {template}")
+    print()
+    print("Next steps:")
+    print(f"  cd {name}")
+    print("  Start building.")
+    print()
+
+    return True
+
+
+def list_templates():
+    print()
+    print("Available templates:")
+    print()
+
+    for name in TEMPLATES:
+        print(f"  • {name}")
+
+    print()
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(
+        prog="nova",
+        description="Minimal project scaffolding CLI."
+    )
+
+    subparsers = parser.add_subparsers(dest="command")
+
+    create = subparsers.add_parser(
+        "create",
+        help="Create a new project."
+    )
+
+    create.add_argument(
+        "name",
+        help="Project name."
+    )
+
+    create.add_argument(
+        "template",
+        choices=TEMPLATES.keys(),
+        help="Project template."
+    )
+
+    subparsers.add_parser(
+        "list",
+        help="List available templates."
+    )
+
+    return parser
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+
+    if args.command == "create":
+        success = create_project(args.name, args.template)
+        sys.exit(0 if success else 1)
+
+    elif args.command == "list":
+        list_templates()
+
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
